@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="586"
+   name=""
+   committed-date="2014-04-18T04:01:55.946359Z"
+   url="svn://192.168.1.7:3691/project/qt0002/03%E6%BA%90%E7%A0%81/qtfr/src/com/compass/role_auth/model"
+   last-author="gaoyang"
+   kind="dir"
+   uuid="bacd6a45-125d-45ee-a2a1-61a17c40a555"
+   repos="svn://192.168.1.7:3691/project"
+   revision="1920"/>
+<entry
+   committed-rev="586"
+   name="Role_AuthBean.java"
+   text-time="2014-04-18T07:16:48.076119Z"
+   committed-date="2014-04-18T04:01:55.946359Z"
+   checksum="dd8f18b18824949e4a5393d14a40e7de"
+   last-author="gaoyang"
+   kind="file"
+   prop-time="2014-04-18T07:16:48.066119Z"/>
+</wc-entries>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORG">
+	
+	<select id="getOrg" resultClass="DimOrgBean" parameterClass="java.util.Map">
+		SELECT org AS orgNo,
+				bgn_dt AS startDt,
+				orgname AS orgName,
+				lev1_org AS level1No,
+				lev1_orgname AS level1Name,
+				lev2_org AS level2No,
+				lev2_orgname AS level2Name,
+				lev3_org AS level3No,
+				lev3_orgname AS level3Name,
+				busi_flag AS  busiFlag,
+				end_dt AS endDt,
+				reg_code AS regCode  
+		FROM GDMDATA.G_C_DIM_ORG
+		WHERE 1=1
+		 <isNotEmpty property="orgNo">
+			AND org=#orgNo#
+		 </isNotEmpty>
+		 
+		 <isNotEmpty property="orgName">
+			AND orgname=#orgName#
+		 </isNotEmpty>
+		 
+		 <isNotEmpty property="startDt">
+			AND bgn_dt=#startDt#
+		 </isNotEmpty>
+		 
+		 <isNotEmpty property="endDt">
+			AND end_dt=#endDt#
+		 </isNotEmpty>
+	</select>
+	
+	
+	
+	
+	<!-- 插入机构维-->
+	<insert id="addOrg" parameterClass="DimOrgBean">
+	
+		INSERT INTO 
+				GDMDATA.G_C_DIM_ORG
+			(
+			 	org,
+				bgn_dt,
+				orgname,
+				lev1_org,
+				lev1_orgname,
+				lev2_org,
+				lev2_orgname,
+				lev3_org,
+				lev3_orgname,
+				busi_flag,
+				end_dt,
+				reg_code
+			) 
+			values (
+				#orgNo#,
+				#startDt#,
+				#orgName#,
+				#level1No#,
+				#level1Name#,
+				#level2No#,
+				#level2Name#,
+				#level3No#,
+				#level3Name#,
+				#busiFlag#,
+				#endDt#,
+				#regCode#
+			)
+		
+	</insert>
+	
+	
+	<!--修改机构维-->
+	<update id="updateOrg"  parameterClass="DimOrgBean">
+	
+		UPDATE 
+		  	GDMDATA.G_C_DIM_ORG
+		SET 
+			bgn_dt = #startDt#,
+			orgname = #orgName#,
+			lev1_org = #level1No#,
+			lev1_orgname = #level1Name#,
+			lev2_org = #level2No#,
+			lev2_orgname = #level2Name#,
+			lev3_org = #level3No#,
+			lev3_orgname = #level3Name#,
+			busi_flag = #busiFlag#,
+			end_dt = #endDt#,
+			reg_code = #regCode#
+		
+		WHERE  org = #orgNo#
+	</update>
+
+	<!-- 删除机构维-->
+	<delete id="deleteOrg"  parameterClass="DimOrgBean">
+	
+		DELETE FROM 	
+		 GDMDATA.G_C_DIM_ORG
+		WHERE 
+		org = #orgNo#
+	</delete>
+	
+</sqlMap>

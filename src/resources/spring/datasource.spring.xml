@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:jee="http://www.springframework.org/schema/jee" 
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:cache="http://www.springframework.org/schema/cache"
+		xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd 
+		http://www.springframework.org/schema/jee 
+		http://www.springframework.org/schema/jee/spring-jee.xsd 
+		http://www.springframework.org/schema/cache 
+		http://www.springframework.org/schema/cache/spring-cache.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd"
+	    default-lazy-init="true">
+  
+  <!-- 数据源定义   -->
+	<!--Weblogic and Tomcat compatible config--> 
+	<!--<jee:jndi-lookup id="dataSource" jndi-name="ODS" resource-ref="true" />-->
+	<!--Weblogic Config-->
+    <!-- <jee:jndi-lookup id="dataSource" jndi-name="ODS" />  -->
+	<!--Tomcat Config-->
+	<!-- <jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/ods" />  -->
+
+
+	<!-- C3P0 Tomcat中开发使用的数据源 -->
+
+	 <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+	    <property name="url" value="jdbc:postgresql://10.1.3.65:5432/jxdwdb" /> 
+		<property name="username" value="jxdwadmin" />
+		<property name="password" value="jxdwadmin" />
+		<property name="maxActive" value="300" />
+		<property name="maxIdle" value="300" />
+		<property name="maxWait" value="5000" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="true" />
+	</bean>
+	 
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+	    <property name="url" value="jdbc:mysql://localhost:3306/eos" /> 
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+		<property name="initialSize" value="20" />  
+		<property name="maxActive" value="300" />
+		<property name="maxIdle" value="300" />
+		<property name="maxWait" value="5000" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="true" />
+	</bean>
+	 -->
+	
+	<bean id="dataSourceDB" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.ibm.db2.jcc.DB2Driver" />
+	    <property name="url" value="jdbc:db2://10.1.9.7:60000/jxeosdb" /> 
+		<property name="username" value="jxdw" />
+		<property name="password" value="qwer5678" />
+		<property name="maxActive" value="300" />
+		<property name="maxIdle" value="300" />
+		<property name="maxWait" value="5000" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="true" />
+	</bean>
+	
+	
+ 
+ 
+ <!-- 事务配置 -->
+   <bean id="transactionManager"  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+   </bean>
+   
+   <bean id="transactionManagerDB"  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <property name="dataSourceDB" ref="dataSourceDB" />
+   </bean>
+   
+
+  <!-- Service 基类-->
+  <bean id="absIbatisDaoService" class="com.compass.utils.AbstractService" abstract="true">
+    <property name="dao" ref="ibatisDao"/>
+  </bean>
+
+ <bean id="absIbatisDaoServiceDB" class="com.compass.utils.AbstractServiceDB" abstract="true">
+    <property name="daoDB" ref="ibatisDaoDB"/>
+  </bean>
+
+  <!--Ibatis设置 -->
+  <bean id="ibatisSqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+    <property name="configLocations" value="classpath*:resources/ibatis/**.ibatis.config.xml"/>
+  </bean>
+  
+  <bean id="ibatisDao" class="com.compass.utils.dao.IbatisDao">
+    <property name="sqlMapClientTemplate" ref="ibatisTemplate"/>
+    <property name="batchSize" value="50"/>
+  </bean>
+  
+  <bean id="ibatisDaoDB" class="com.compass.utils.dao.IbatisDao">
+    <property name="sqlMapClientTemplate" ref="ibatisTemplateDB"/>
+    <property name="batchSize" value="50"/>
+  </bean>
+  
+  
+
+  <bean id="ibatisTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+    <constructor-arg index="0" ref="dataSource"/>
+    <constructor-arg index="1" ref="ibatisSqlMapClient"/>
+  </bean>
+  
+  
+   <bean id="ibatisTemplateDB" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+    <constructor-arg index="0" ref="dataSourceDB"/>
+    <constructor-arg index="1" ref="ibatisSqlMapClient"/>
+  </bean>
+
+
+</beans>
